@@ -22,7 +22,6 @@ class ObjectDetector:
     def _load_model(self):
         net = cv2.dnn.readNetFromDarknet(self.model_cfg, self.model_weights)
         net.setPreferableBackend(cv2.dnn.DNN_BACKEND_OPENCV)
-        # net.setPreferableTarget(cv2.dnn.DNN_TARGET_CPU)  # Use DNN_TARGET_OPENCL for GPU
         net.setPreferableTarget(cv2.dnn.DNN_TARGET_OPENCL)
         return net
 
