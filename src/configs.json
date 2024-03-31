@@ -1,0 +1,13 @@
+{
+    "detector": {
+        "img_size": [640,480],
+        "conf_thresh":0.3,
+        "nms_thresh": 0.4
+    },
+    "tracker": {
+        "fps": 30,
+        "track_thresh": 0.45,
+        "track_buffer": 25,
+        "match_thresh": 0.8
+    }
+}
