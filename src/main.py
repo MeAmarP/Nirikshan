@@ -25,20 +25,20 @@ def display_tracked_ids(frame, tracked_objects):
 
 def main():
     # Paths to model files
-    model_cfg = str(Path(os.getcwd()) / 'models' / 'yolov3.cfg')
-    model_weights = str(Path(os.getcwd()) / 'models' / 'yolov3.weights')
-    class_file = str(Path(os.getcwd()) / 'assets' / 'coco.names')
+    model_cfg = str(Path(os.getcwd()) / '..' / 'models' / 'yolov3.cfg')
+    model_weights = str(Path(os.getcwd()) / '..' / 'models' / 'yolov3.weights')
+    class_file = str(Path(os.getcwd())/ '..' / 'assets' / 'coco.names')
     
     # Initialize object detector with YOLOv3 model
     yolov3_detector = ObjectDetector(model_cfg=model_cfg, model_weights=model_weights, class_file=class_file)
 
     # Initialize object tracker
     tracker = BYTETracker(frame_rate=30)  # Assuming 30 fps for now (can be adjusted later)
-
+\
 
     try:
     # Open the video file
-        cap = cv2.VideoCapture("data/palace.mp4")
+        cap = cv2.VideoCapture("../data/palace.mp4")
     except Exception as e:
         traceback.print_exc()
         print(f"An error occurred while trying to open the video file: {e}")
