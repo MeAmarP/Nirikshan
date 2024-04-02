@@ -6,17 +6,19 @@ import os
 
 import json
 
+from configs import AppConfig
 from detector import ObjectDetector
-# from .tracker.byte_tracker import BYTETracker
 from tracker.byte_tracker import BYTETracker
 
 def display_detections(frame, detections):
+    # TODO Move to new file 'utils'
     for dets in detections:
         bbox = dets['box']
         cv2.rectangle(frame, (bbox[0], bbox[1]), (bbox[2], bbox[3]), (255, 0, 0), 2)
         cv2.putText(frame, dets['class_name'], (bbox[0], bbox[1]-10), cv2.FONT_HERSHEY_PLAIN, 2, (36,255,12), 2)
 
 def display_tracked_ids(frame, tracked_objects):
+    # TODO Move to new file 'utils'
     for obj in tracked_objects:
         bbox = obj.tlwh.astype(np.int32)
         id = obj.track_id
@@ -24,21 +26,22 @@ def display_tracked_ids(frame, tracked_objects):
         cv2.putText(frame, str(id), (bbox[0], bbox[1]-10), cv2.FONT_HERSHEY_PLAIN, 2, (0,0,255), 2)
 
 def main():
-    # Paths to model files
-    model_cfg = str(Path(os.getcwd()) / '..' / 'models' / 'yolov3.cfg')
-    model_weights = str(Path(os.getcwd()) / '..' / 'models' / 'yolov3.weights')
-    class_file = str(Path(os.getcwd())/ '..' / 'assets' / 'coco.names')
-    
-    # Initialize object detector with YOLOv3 model
-    yolov3_detector = ObjectDetector(model_cfg=model_cfg, model_weights=model_weights, class_file=class_file)
+    model_cfg = Path.cwd() / AppConfig.yolov3_cfg
+    model_weights = Path.cwd() / AppConfig.yolov3_weights
+    class_file = Path.cwd() / AppConfig.path_coco_names
+
+    if not (model_cfg.exists() and model_weights.exists()):
+        raise FileNotFoundError('Model files not found')
+
+    # Initialize object detector
+    yolov3_detector = ObjectDetector(model_cfg=str(model_cfg), model_weights=str(model_weights), class_file=str(class_file))
 
     # Initialize object tracker
-    tracker = BYTETracker(frame_rate=30)  # Assuming 30 fps for now (can be adjusted later)
-\
+    tracker = BYTETracker(frame_rate=AppConfig.tracker_fps)  # Assuming 30 fps for now (can be adjusted later)
 
     try:
     # Open the video file
-        cap = cv2.VideoCapture("../data/palace.mp4")
+        cap = cv2.VideoCapture("/home/c3po/Documents/project/learning/amar-works/Nirikshan/data/palace.mp4")
     except Exception as e:
         traceback.print_exc()
         print(f"An error occurred while trying to open the video file: {e}")
@@ -89,9 +92,4 @@ def main():
 
 
 if __name__ == "__main__":
-    with open('configs.json') as config_file:
-        config = json.load(config_file)
-
-    print(f"Configurations loaded: {config}")
-
     main()
