@@ -9,32 +9,13 @@ import json
 from configs import AppConfig
 from detector import ObjectDetector
 from tracker.byte_tracker import BYTETracker
+from utils import display_detections, display_tracked_ids
 
-def display_detections(frame, detections):
-    # TODO Move to new file 'utils'
-    for dets in detections:
-        bbox = dets['box']
-        cv2.rectangle(frame, (bbox[0], bbox[1]), (bbox[2], bbox[3]), (255, 0, 0), 2)
-        cv2.putText(frame, dets['class_name'], (bbox[0], bbox[1]-10), cv2.FONT_HERSHEY_PLAIN, 2, (36,255,12), 2)
-
-def display_tracked_ids(frame, tracked_objects):
-    # TODO Move to new file 'utils'
-    for obj in tracked_objects:
-        bbox = obj.tlwh.astype(np.int32)
-        id = obj.track_id
-        cv2.rectangle(frame, (bbox[0], bbox[1]), (bbox[0]+bbox[2], bbox[1]+bbox[3]), (0, 255, 0), 2)
-        cv2.putText(frame, str(id), (bbox[0], bbox[1]-10), cv2.FONT_HERSHEY_PLAIN, 2, (0,0,255), 2)
 
 def main():
-    model_cfg = Path.cwd() / AppConfig.yolov3_cfg
-    model_weights = Path.cwd() / AppConfig.yolov3_weights
-    class_file = Path.cwd() / AppConfig.path_coco_names
-
-    if not (model_cfg.exists() and model_weights.exists()):
-        raise FileNotFoundError('Model files not found')
 
     # Initialize object detector
-    yolov3_detector = ObjectDetector(model_cfg=str(model_cfg), model_weights=str(model_weights), class_file=str(class_file))
+    yolov3_detector = ObjectDetector(model='yolov3')
 
     # Initialize object tracker
     tracker = BYTETracker(frame_rate=AppConfig.tracker_fps)  # Assuming 30 fps for now (can be adjusted later)
@@ -43,8 +24,8 @@ def main():
     # Open the video file
         cap = cv2.VideoCapture("/home/c3po/Documents/project/learning/amar-works/Nirikshan/data/palace.mp4")
     except Exception as e:
-        traceback.print_exc()
         print(f"An error occurred while trying to open the video file: {e}")
+        traceback.print_exc()
     else:
         # If successful, continue with processing the video frames
         while True:
@@ -54,6 +35,7 @@ def main():
                 
                 # If the 'ret' value is False (i.e., there are no more frames to read)
                 if not ret:
+                    print("No frames to read.")
                     break
 
                 detections = yolov3_detector.detect(frame, target_class_id=0) # 0 for person
@@ -80,15 +62,12 @@ def main():
                 if cv2.waitKey(1) & 0xFF == ord('q'):
                     break
             except Exception as e:
-                traceback.print_exc()
                 print(f"An error occurred while trying to process the video frames: {e}")
-                break
+                traceback.print_exc()
         
         # Release the video capture object and close any open windows
         cap.release()
         cv2.destroyAllWindows()
-    finally:
-        print("Video processing complete.")
 
 
 if __name__ == "__main__":
