@@ -73,7 +73,7 @@ class ObjectDetector:
             x, y, w, h = box
             detections.append({
                 "class_id": class_ids[i],
-                "class_name": self.class_names[class_ids[i]],
+                "class_name": [k for k,v in self.class_names.items() if v == self.target_class_id],
                 "confidence": confidences[i],
                 "box": [x, y, x+w, y+h] #tlbr format
             })
