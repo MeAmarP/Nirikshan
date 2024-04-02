@@ -24,25 +24,27 @@ class ObjectDetector:
     def _load_class_names(self, class_file):
         with open(class_file, 'r') as f:
             class_names = [line.strip() for line in f.readlines()]
-        return class_names
+            class_id_names = {label:id for id, label in enumerate(class_names)}
+        return class_id_names
 
     def _load_model(self):
         if not (self.model_cfg.exists() and self.model_weights.exists()):
             raise FileNotFoundError('Model files not found')
 
+        net = cv2.dnn.readNetFromDarknet(str(self.model_cfg), str(self.model_weights))
         net.setPreferableBackend(cv2.dnn.DNN_BACKEND_OPENCV)
         net.setPreferableTarget(cv2.dnn.DNN_TARGET_OPENCL)
         return net
 
     def detect(self, image, target_class_id=0):
         self.target_class_id = target_class_id
-        blob = cv2.dnn.blobFromImage(image, 1/255.0, (224, 224), swapRB=True, crop=False)
+        blob = cv2.dnn.blobFromImage(image, 1/255.0, (self.input_size, self.input_size), swapRB=True, crop=False)
         self.net.setInput(blob)
 
         layer_names = self.net.getLayerNames()
         output_layers = [layer_names[i - 1] for i in self.net.getUnconnectedOutLayers()]
         outputs = self.net.forward(output_layers)
-
+        # ! TODO Handle case where no objects detected by the model, return empty list or something
         return self._process_outputs(outputs, image)
 
     def _process_outputs(self, outputs, image):
