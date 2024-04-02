@@ -5,12 +5,17 @@ import numpy as np
 # TODO - Detector using NVIDIA Triton Server
 
 class ObjectDetector:
-    def __init__(self, model_cfg='yolov3.cfg', model_weights='yolov3.weights', class_file='coco.names', threshold=0.2, nms_threshold=0.3):
-        self.model_cfg = model_cfg
-        self.model_weights = model_weights
-        self.class_names = self._load_class_names(class_file)
-        self.threshold = threshold
-        self.nms_threshold = nms_threshold
+    def __init__(self, model: str='yolov3',):
+        if model == 'yolov3':
+            self.model_cfg = Path.cwd() / AppConfig.yolov3_cfg
+            self.model_weights = Path.cwd() / AppConfig.yolov3_weights
+        if model == 'yolov4':
+            self.model_cfg = Path.cwd() / AppConfig.yolov4_cfg
+            self.model_weights = Path.cwd() / AppConfig.yolov4_weights
+        self.class_names = self._load_class_names(str(Path.cwd() / AppConfig.path_coco_names))
+        self.threshold = AppConfig.detector_conf_thresh
+        self.nms_threshold = AppConfig.detector_nms_thresh
+        self.input_size = AppConfig.detector_input_size
         self.net = self._load_model()
         self.target_class_id = 0
 
