@@ -7,6 +7,9 @@ class CountAnalytics:
         self.classwise_count = {}  # stores objects to be tracked with their counts
         self.init_counts()  # initialize counts for each class label
 
+    def __str__(self) -> str:
+        return " ".join(f"{k} {v}" for k,v in self.classwise_count.items())
+
     def init_counts(self):        
         for label in self.target_class_labels:
             if label not in self.classwise_count:
