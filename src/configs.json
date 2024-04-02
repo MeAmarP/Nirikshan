@@ -1,4 +1,12 @@
 {
+    "yolov3_model":{
+        "weights":"models/yolov3.weights",
+        "config":"models/yolov3.cfg"
+    },
+    "yolov4_model":{
+        "weights":"models/yolov4.weights",
+        "config":"models/yolov4.cfg"
+    },
     "detector": {
         "img_size": [640,480],
         "conf_thresh":0.3,
@@ -9,5 +17,9 @@
         "track_thresh": 0.45,
         "track_buffer": 25,
         "match_thresh": 0.8
+    },
+    "others":{
+        "coco_names":"assets/coco.names"
     }
+
 }
