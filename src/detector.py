@@ -36,8 +36,8 @@ class ObjectDetector:
         net.setPreferableTarget(cv2.dnn.DNN_TARGET_OPENCL)
         return net
 
-    def detect(self, image, target_class_id=0):
-        self.target_class_id = target_class_id
+    def detect(self, image, target_class_labels: list):
+        self.target_class_id = [self.class_names[label] for label in target_class_labels]
         blob = cv2.dnn.blobFromImage(image, 1/255.0, (self.input_size, self.input_size), swapRB=True, crop=False)
         self.net.setInput(blob)
 

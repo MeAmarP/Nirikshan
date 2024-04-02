@@ -10,7 +10,7 @@ from configs import AppConfig
 from detector import ObjectDetector
 from tracker.byte_tracker import BYTETracker
 from utils import display_detections, display_tracked_ids
-
+from core.analytics import CountAnalytics
 
 def main():
 
@@ -38,7 +38,7 @@ def main():
                     print("No frames to read.")
                     break
 
-                detections = yolov3_detector.detect(frame, target_class_id=0) # 0 for person
+                detections = yolov3_detector.detect(frame, target_class_labels=AppConfig.detector_class_labels) # 0 for person
 
                 if len(detections) > 0:
 
