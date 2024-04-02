@@ -29,7 +29,8 @@ class AppConfig:
         cls.yolov4_weights = str(Path(config['yolov4_model']['weights']))
         cls.yolov4_cfg = str(Path(config['yolov4_model']['config']))
         # detector
-        cls.detector_img_size = config['detector']['img_size']
+        cls.detector_class_labels = config['detector']['class_labels']
+        cls.detector_input_size = config['detector']['input_size']
         cls.detector_conf_thresh = config['detector']['conf_thresh']
         cls.detector_nms_thresh = config['detector']['nms_thresh']
         # tracker
