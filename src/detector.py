@@ -27,7 +27,9 @@ class ObjectDetector:
         return class_names
 
     def _load_model(self):
-        net = cv2.dnn.readNetFromDarknet(self.model_cfg, self.model_weights)
+        if not (self.model_cfg.exists() and self.model_weights.exists()):
+            raise FileNotFoundError('Model files not found')
+
         net.setPreferableBackend(cv2.dnn.DNN_BACKEND_OPENCV)
         net.setPreferableTarget(cv2.dnn.DNN_TARGET_OPENCL)
         return net
