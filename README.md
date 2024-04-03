@@ -1,19 +1,46 @@
 # Nirikshan (Supervision)
-## Real Time Video Analytics Pipeline using AI and Deep Learning 
+## Real Time Video Analytics Pipeline using object detection and tracking 
 
-Nirikshan aims to provide real-time video analytics. It uses AI and Deep Learning techniques for object detection, tracking, and action recognition in videos.
+Nirikshan aims to provide video analytics on video sources like RTSP stream or video file.
 
-### Tech Stack
+- DNN Models
+  - object detection: yolo-V3/V4
+  - Pose Estimation: MediaPipe
+  - Face Detection
+- Object Tracker: ByteTracker
+- OpenCV for Video Processing and DNN for Inference
+- User Interface
 - Python
-- Tensorflow/Keras for Deep Learning Models
-- OpenCV for Video Processing and Analysis
-- Flask for API Development
-- Docker, Kubernetes for Deployment
 
-
-### TODO
+### Analytics
+- Class: **Person**
+  - [x] Count 
+  - Emotion
+  - Age Category
+    - Young Adults
+    - Middle Aged
+    - Older Adults
+  - Action
+    - Smoking
+    - Fighting
+    - Patient monitoring for fall
+- Class: **Vehicle**
+   - Count
+   - Type (Car, Bus, Bike)
+   - Color
+   - Brand
+   - LPR
+- Class: **Animal**
+  - Count
+  - Species
+  
+### FUTURE SCOPE (Items in the list are in consideration, not finalized though)
 - Action recognition in videos.
 - Support for multiple video sources (IP Cameras, Local Files)
+- Dockerize Analytics
+- GPU Support for faster inference
+- User Interface for visualizing analytics results
+
 ### References
 - yolov3:
 - yolov4: 
