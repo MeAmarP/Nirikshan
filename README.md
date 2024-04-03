@@ -1,7 +1,7 @@
 # Nirikshan (Supervision)
 ## Real Time Video Analytics Pipeline using object detection and tracking 
 
-Nirikshan aims to provide video analytics on video sources like RTSP stream or video file.
+Nirikshan aims to provide video analytics on video sources like RTSP stream or video file using deep learning models.
 
 - Video Source
   - [x] Video file
