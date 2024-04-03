@@ -83,18 +83,12 @@ class ObjectDetector:
         return detections
 
 if __name__ == "__main__":
-    from pathlib import Path
+    # TODO Update this to get paths from App config file
     import os
-
-    model_cfg = str(Path(os.getcwd()) / 'models' / 'yolov3.cfg')
-    model_weights = str(Path(os.getcwd()) / 'models' / 'yolov3.weights')
-    class_file = str(Path(os.getcwd()) / 'assets' / 'coco.names')
     image_path = str(Path(os.getcwd()) / 'data' / '1.jpg')
     
-    detector = ObjectDetector(model_cfg=model_cfg, 
-                              model_weights=model_weights,
-                              class_file=class_file)
-    
-    detections = detector.detect(image_path)
-    print(detections)
+    detector = ObjectDetector()
+    img = cv2.imread(image_path)
+    detects = detector.detect(img, AppConfig.detector_class_labels)
+    print(detects)
 
