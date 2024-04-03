@@ -20,6 +20,9 @@ def main():
     # Initialize object tracker
     tracker = BYTETracker(frame_rate=AppConfig.tracker_fps)  # Assuming 30 fps for now (can be adjusted later)
 
+    # Initialize analytics object
+    count_analytics = CountAnalytics()
+
     try:
     # Open the video file
         cap = cv2.VideoCapture("/home/c3po/Documents/project/learning/amar-works/Nirikshan/data/palace.mp4")
@@ -46,14 +49,17 @@ def main():
                     # where N is the number of detections and each detection has format [x1, y1, x2, y2, confidence]  
                     np_detections = np.array([np.concatenate((np.array(det['box']).astype(np.float16), np.array([det['confidence']]).astype(np.float16))) for det in detections])
                     
-                    
                     tracked_objects = tracker.update(np_detections)
+                    
+                    # ** Analytics **
+                    count_analytics.update(tracked_objects, 'person')
 
                     # draw detections
                     # display_detections(frame=frame, detections=detections)
 
                     # draw tracked objects
                     display_tracked_ids(frame=frame, tracked_objects=tracked_objects)
+
 
                 # Display the current frame
                 cv2.imshow('Video', frame)
