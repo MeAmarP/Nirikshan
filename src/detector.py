@@ -31,7 +31,7 @@ class ObjectDetector:
         if not (self.model_cfg.exists() and self.model_weights.exists()):
             raise FileNotFoundError('Model files not found')
 
-        net = cv2.dnn.readNetFromDarknet(str(self.model_cfg), str(self.model_weights))
+        net = cv2.dnn.readNet(str(self.model_weights), str(self.model_cfg))  # OpenCV's dnn module
         net.setPreferableBackend(cv2.dnn.DNN_BACKEND_OPENCV)
         net.setPreferableTarget(cv2.dnn.DNN_TARGET_OPENCL)
         return net
