@@ -28,6 +28,11 @@ class AppConfig:
         # yolov4
         cls.yolov4_weights = str(Path(config['yolov4_model']['weights']))
         cls.yolov4_cfg = str(Path(config['yolov4_model']['config']))
+        # yunet-face 
+        cls.yunet_weights = str(Path(config['yunet-face']['weights']))
+        cls.yunet_input_size = config['yunet-face']['input_size']  # (h, w) tuple
+        cls.yunet_conf_thresh = config['yunet-face']['conf_thresh']
+        cls.yunet_nms_thresh = config['yunet-face']['nms_thresh']
         # detector
         cls.detector_class_labels = config['detector']['class_labels']
         cls.detector_input_size = config['detector']['input_size']
