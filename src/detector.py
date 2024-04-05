@@ -14,6 +14,8 @@ class ObjectDetector:
         if model == 'yolov4':
             self.model_cfg = Path.cwd() / AppConfig.yolov4_cfg
             self.model_weights = Path.cwd() / AppConfig.yolov4_weights
+        if model == 'yunet-face':
+            self.model_cfg = Path.cwd() / AppConfig.yunet_weights
         self.class_names = self._load_class_names(str(Path.cwd() / AppConfig.path_coco_names))
         self.threshold = AppConfig.detector_conf_thresh
         self.nms_threshold = AppConfig.detector_nms_thresh
