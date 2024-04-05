@@ -3,6 +3,7 @@ from configs import AppConfig
 
 class CountAnalytics:
     def __init__(self):
+        self.name = 'CountAnalytics'
         self.target_class_labels = AppConfig.detector_class_labels
         self.classwise_count_curr = {}  # stores objects to be tracked with their counts
         self.init_counts()  # initialize counts for each class label
@@ -20,3 +21,6 @@ class CountAnalytics:
         if label in self.target_class_labels:
             # Increment its count
             self.classwise_count_curr[label] = len(tracked_objects)
+
+    def get(self):
+        return self.classwise_count_curr
