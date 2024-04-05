@@ -7,6 +7,12 @@
         "weights":"models/yolov4.weights",
         "config":"models/yolov4.cfg"
     },
+    "yunet-face":{
+        "weights":"models/face_detection_yunet_2023mar.onnx",
+        "conf_thresh": 0.6,
+        "nms_thresh": 0.4,
+        "input_size":  320
+    },
     "detector": {
         "class_labels":["person"],
         "input_size": 224,
