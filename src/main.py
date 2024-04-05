@@ -9,7 +9,7 @@ import json
 from configs import AppConfig
 from detector import ObjectDetector
 from tracker.byte_tracker import BYTETracker
-from utils import display_detections, display_tracked_ids
+from utils import display_detections, display_tracked_ids, display_analytics
 from core.analytics import CountAnalytics
 
 def main():
@@ -53,6 +53,8 @@ def main():
                     
                     # ** Analytics **
                     count_analytics.update(tracked_objects, 'person')
+                    # write a code to display analytics on frame
+                    display_analytics(frame, count_analytics)
 
                     # draw detections
                     # display_detections(frame=frame, detections=detections)
