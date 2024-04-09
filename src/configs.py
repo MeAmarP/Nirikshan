@@ -28,16 +28,16 @@ class AppConfig:
         # yolov4
         cls.yolov4_weights = str(Path(config['yolov4_model']['weights']))
         cls.yolov4_cfg = str(Path(config['yolov4_model']['config']))
+        # yolo-detector
+        cls.detector_class_labels = config['detector']['class_labels']
+        cls.detector_input_size = config['detector']['input_size']
+        cls.detector_conf_thresh = config['detector']['conf_thresh']
+        cls.detector_nms_thresh = config['detector']['nms_thresh']
         # yunet-face 
         cls.yunet_weights = str(Path(config['yunet-face']['weights']))
         cls.yunet_input_size = config['yunet-face']['input_size']  # (h, w) tuple
         cls.yunet_conf_thresh = config['yunet-face']['conf_thresh']
         cls.yunet_nms_thresh = config['yunet-face']['nms_thresh']
-        # detector
-        cls.detector_class_labels = config['detector']['class_labels']
-        cls.detector_input_size = config['detector']['input_size']
-        cls.detector_conf_thresh = config['detector']['conf_thresh']
-        cls.detector_nms_thresh = config['detector']['nms_thresh']
         # tracker
         cls.tracker_fps = config['tracker']['fps']
         cls.tracker_track_thresh = config['tracker']['track_thresh']
@@ -48,6 +48,3 @@ class AppConfig:
 config_path = str(Path.cwd() / 'src' / 'configs.json')
 AppConfig.load_config(config_path)
 
-# Usage after import
-# from your_module_name import AppConfig
-# print(AppConfig.detector_img_size)
