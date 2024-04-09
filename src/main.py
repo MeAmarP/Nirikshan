@@ -29,7 +29,7 @@ def main():
 
     try:
     # Open the video file
-        cap = cv2.VideoCapture("/home/c3po/Documents/project/learning/amar-works/Nirikshan/data/palace.mp4")
+        cap = cv2.VideoCapture("/data/office.mp4")
     except Exception as e:
         print(f"An error occurred while trying to open the video file: {e}")
         traceback.print_exc()
