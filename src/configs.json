@@ -7,18 +7,19 @@
         "weights":"models/yolov4.weights",
         "config":"models/yolov4.cfg"
     },
-    "yunet-face":{
-        "weights":"models/face_detection_yunet_2023mar.onnx",
-        "conf_thresh": 0.6,
-        "nms_thresh": 0.4,
-        "input_size":  320
-    },
     "detector": {
         "class_labels":["person"],
         "input_size": 224,
         "conf_thresh":0.2,
         "nms_thresh": 0.3
     },
+    "yunet-face":{
+        "weights":"models/yunet_n_640_640.onnx",
+        "conf_thresh": 0.6,
+        "nms_thresh": 0.4,
+        "input_size":  640
+    },
+
     "tracker": {
         "fps": 20,
         "track_thresh": 0.5,
