@@ -93,7 +93,12 @@ class ObjectDetector:
             })
 
         return detections
-
+    def _face_yunet_detect(self, image):
+        self.ynet.setInputSize((image.shape[1], image.shape[0]))
+        _, faces = self.ynet.detect(image)
+        faces = faces if faces is not None else []
+        return faces
+    
     def detect(self, image):
         if self.model_name == 'yolov3':
             return self._yolo_detect(image)
