@@ -32,6 +32,27 @@ def display_detections(frame: np.array, detections):
         cv2.rectangle(frame, (bbox[0], bbox[1]), (bbox[2], bbox[3]), Color.green, 2)
         cv2.putText(frame, dets['class_name'], (bbox[0], bbox[1]-10), cv2.FONT_HERSHEY_PLAIN, 2, Color.orange, 2)
 
+def display_faces(frame: np.array, faces):
+
+    for face in faces:
+            box = list(map(int, face[:4]))
+            cv2.rectangle(frame, box, Color.red, 2, cv2.LINE_AA)
+
+            # landmarks = list(map(int, face[4:len(face)-1]))
+            # landmarks = np.array_split(landmarks, len(landmarks) / 2)
+            # for landmark in landmarks:
+            #     radius = 5
+            #     thickness = -1
+            #     cv2.circle(image, landmark, radius, color, thickness, cv2.LINE_AA)
+                
+            # confidence = face[-1]
+            # confidence = "{:.2f}".format(confidence)
+            # position = (box[0], box[1] - 10)
+            # font = cv2.FONT_HERSHEY_SIMPLEX
+            # scale = 0.5
+            # thickness = 2
+            # cv2.putText(image, confidence, position, font, scale, color, thickness, cv2.LINE_AA)
+
 def display_tracked_ids(frame: np.array, tracked_objects):
     """_summary_
 
