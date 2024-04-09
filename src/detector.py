@@ -8,21 +8,59 @@ from configs import AppConfig
 
 class ObjectDetector:
     def __init__(self, model: str='yolov3',):
-        if model == 'yolov3':
-            self.model_cfg = Path.cwd() / AppConfig.yolov3_cfg
-            self.model_weights = Path.cwd() / AppConfig.yolov3_weights
-        if model == 'yolov4':
-            self.model_cfg = Path.cwd() / AppConfig.yolov4_cfg
-            self.model_weights = Path.cwd() / AppConfig.yolov4_weights
-        if model == 'yunet-face':
-            self.model_cfg = Path.cwd() / AppConfig.yunet_weights
-        self.class_names = self._load_class_names(str(Path.cwd() / AppConfig.path_coco_names))
-        self.threshold = AppConfig.detector_conf_thresh
-        self.nms_threshold = AppConfig.detector_nms_thresh
-        self.input_size = AppConfig.detector_input_size
-        self.net = self._load_model()
-        self.target_class_id = 0
+        self.class_names = None
+        self.target_class_labels = None
+        self.model_cfg = None
+        self.model_weights = None
+        self.model_name = model
+        # ! TODO Modify config.json such a that yolov3/4 have their own parameters 
+        # ! Class labels, input size, conf_thresh, nms_thresh etc.
+        # ? TODO find better way to manage repeated code
+        if self.model_name == 'yolov3':
+            self.model_cfg = str(Path.cwd() / AppConfig.yolov3_cfg)
+            
+            self.model_weights = str(Path.cwd() / AppConfig.yolov3_weights)
+            
+            # load coco names and get all supported class_labels by model
+            self.class_names = self._load_class_names(str(Path.cwd() / AppConfig.path_coco_names))
+            
+            # load target class labels that need to detected from config
+            self.target_class_labels=AppConfig.detector_class_labels
+            
+            # Get target IDs from class labels we loaded , this will be list of IDs
+            self.target_class_id = [self.class_names[label] for label in self.target_class_labels]
 
+            # load detection threshold from config
+            self.threshold = AppConfig.detector_conf_thresh
+            # load nms threshold from config
+            self.nms_threshold = AppConfig.detector_nms_thresh
+            # load input size from config
+            self.input_size = AppConfig.detector_input_size
+            # load model
+            self.net = self._load_model()
+            self.target_class_id = 0
+
+        if self.model_name == 'yolov4':
+            self.model_cfg = str(Path.cwd() / AppConfig.yolov4_cfg)
+            self.model_weights = str(Path.cwd() / AppConfig.yolov4_weights)
+            # load coco names and get all supported class_labels by model
+            self.class_names = self._load_class_names(str(Path.cwd() / AppConfig.path_coco_names))
+            
+            # load target class labels that need to detected from config
+            self.target_class_labels=AppConfig.detector_class_labels
+            
+            # Get target IDs from class labels we loaded , this will be list of IDs
+            self.target_class_id = [self.class_names[label] for label in self.target_class_labels]
+            
+            # load detection threshold from config
+            self.threshold = AppConfig.detector_conf_thresh
+            # load nms threshold from config
+            self.nms_threshold = AppConfig.detector_nms_thresh
+            # load input size from config
+            self.input_size = AppConfig.detector_input_size
+            # load model
+            self.net = self._load_model()
+            self.target_class_id = 0
         if self.model_name == 'yunet-face':
             self.model_cfg = Path.cwd() / AppConfig.yunet_weights
             self.yunet_input_size = AppConfig.yunet_input_size
@@ -38,6 +76,14 @@ class ObjectDetector:
         return class_id_names
 
     def _load_model(self):
+        # if not Path(self.model_cfg).exists():
+        #     raise FileNotFoundError('Model cfg files not found')
+        # if not Path(self.model_weights).exists():
+        #     raise FileNotFoundError('Model weights not found')
+        if 'yolo' in self.model_name:
+            net = cv2.dnn.readNet(str(self.model_weights), str(self.model_cfg))
+            net.setPreferableBackend(cv2.dnn.DNN_BACKEND_OPENCV)
+            net.setPreferableTarget(cv2.dnn.DNN_TARGET_OPENCL)
         if self.model_name == 'yunet-face':
             net = cv2.FaceDetectorYN.create(str(self.model_cfg),
                                             "",
@@ -47,18 +93,7 @@ class ObjectDetector:
                                             backend_id=0,
                                             target_id=0)
         return net
-
-    def detect(self, image, target_class_labels: list):
-        self.target_class_id = [self.class_names[label] for label in target_class_labels]
-        blob = cv2.dnn.blobFromImage(image, 1/255.0, (self.input_size, self.input_size), swapRB=True, crop=False)
-        self.net.setInput(blob)
-
-        layer_names = self.net.getLayerNames()
-        output_layers = [layer_names[i - 1] for i in self.net.getUnconnectedOutLayers()]
-        outputs = self.net.forward(output_layers)
-        # ! TODO Handle case where no objects detected by the model, return empty list or something
-        return self._process_outputs(outputs, image)
-
+    
     def _process_outputs(self, outputs, image):
         height, width = image.shape[:2]
         boxes = []
@@ -93,6 +128,16 @@ class ObjectDetector:
             })
 
         return detections
+
+    def _yolo_detect(self, image):
+        blob = cv2.dnn.blobFromImage(image, 1/255.0, (self.input_size, self.input_size), swapRB=True, crop=False)
+        self.net.setInput(blob)
+        layer_names = self.net.getLayerNames()
+        output_layers = [layer_names[i - 1] for i in self.net.getUnconnectedOutLayers()]
+        outputs = self.net.forward(output_layers)
+        # ! TODO Handle case where no objects detected by the model, return empty list or something
+        return self._process_outputs(outputs, image)
+    
     def _face_yunet_detect(self, image):
         self.ynet.setInputSize((image.shape[1], image.shape[0]))
         _, faces = self.ynet.detect(image)
@@ -106,13 +151,7 @@ class ObjectDetector:
             return self._yolo_detect(image)
         if self.model_name == 'yunet-face':
             return self._face_yunet_detect(image)
+
 if __name__ == "__main__":
-    # TODO Update this to get paths from App config file
-    import os
-    image_path = str(Path(os.getcwd()) / 'data' / '1.jpg')
-    
-    detector = ObjectDetector()
-    img = cv2.imread(image_path)
-    detects = detector.detect(img, AppConfig.detector_class_labels)
-    print(detects)
+    print("Starting object detection")
 
