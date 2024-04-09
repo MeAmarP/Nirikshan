@@ -10,12 +10,16 @@ from configs import AppConfig
 from detector import ObjectDetector
 from tracker.byte_tracker import BYTETracker
 from utils import display_detections, display_tracked_ids, display_analytics
+from utils import display_faces
 from core.analytics import CountAnalytics
 
 def main():
 
     # Initialize object detector
     yolov3_detector = ObjectDetector(model='yolov3')
+
+    # Init Face Detector
+    face_detector = ObjectDetector(model='yunet-face')
 
     # Initialize object tracker
     tracker = BYTETracker(frame_rate=AppConfig.tracker_fps)  # Assuming 30 fps for now (can be adjusted later)
@@ -41,7 +45,12 @@ def main():
                     print("No frames to read.")
                     break
 
-                detections = yolov3_detector.detect(frame, target_class_labels=AppConfig.detector_class_labels) # 0 for person
+
+                # Detect objects
+                detections = yolov3_detector.detect(frame)
+
+                # Detect faces
+                face_detections = face_detector.detect(frame)
 
                 if len(detections) > 0:
 
@@ -62,6 +71,9 @@ def main():
                     # draw tracked objects
                     display_tracked_ids(frame=frame, tracked_objects=tracked_objects)
 
+                if face_detections:
+                    print(f"Face Detected {len(face_detections)}")
+                    display_faces(frame, face_detections)
 
                 # Display the current frame
                 cv2.imshow('Video', frame)
@@ -72,6 +84,7 @@ def main():
             except Exception as e:
                 print(f"An error occurred while trying to process the video frames: {e}")
                 traceback.print_exc()
+                break
         
         # Release the video capture object and close any open windows
         cap.release()
