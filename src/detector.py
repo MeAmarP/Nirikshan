@@ -23,6 +23,14 @@ class ObjectDetector:
         self.net = self._load_model()
         self.target_class_id = 0
 
+        if self.model_name == 'yunet-face':
+            self.model_cfg = Path.cwd() / AppConfig.yunet_weights
+            self.yunet_input_size = AppConfig.yunet_input_size
+            self.yunet_conf_thresh = AppConfig.yunet_conf_thresh
+            self.yunet_nms_thresh = AppConfig.yunet_nms_thresh
+            self.ynet = self._load_model()
+        
+
     def _load_class_names(self, class_file):
         with open(class_file, 'r') as f:
             class_names = [line.strip() for line in f.readlines()]
@@ -30,12 +38,14 @@ class ObjectDetector:
         return class_id_names
 
     def _load_model(self):
-        if not (self.model_cfg.exists() and self.model_weights.exists()):
-            raise FileNotFoundError('Model files not found')
-
-        net = cv2.dnn.readNet(str(self.model_weights), str(self.model_cfg))  # OpenCV's dnn module
-        net.setPreferableBackend(cv2.dnn.DNN_BACKEND_OPENCV)
-        net.setPreferableTarget(cv2.dnn.DNN_TARGET_OPENCL)
+        if self.model_name == 'yunet-face':
+            net = cv2.FaceDetectorYN.create(str(self.model_cfg),
+                                            "",
+                                            (640,640),
+                                            self.yunet_conf_thresh,
+                                            self.yunet_nms_thresh,
+                                            backend_id=0,
+                                            target_id=0)
         return net
 
     def detect(self, image, target_class_labels: list):
@@ -84,6 +94,13 @@ class ObjectDetector:
 
         return detections
 
+    def detect(self, image):
+        if self.model_name == 'yolov3':
+            return self._yolo_detect(image)
+        if self.model_name == 'yolov4':
+            return self._yolo_detect(image)
+        if self.model_name == 'yunet-face':
+            return self._face_yunet_detect(image)
 if __name__ == "__main__":
     # TODO Update this to get paths from App config file
     import os
