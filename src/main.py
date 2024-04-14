@@ -62,7 +62,6 @@ def main():
                     
                     # ** Analytics **
                     count_analytics.update(tracked_objects, 'person')
-                    # write a code to display analytics on frame
                     display_analytics(frame, count_analytics)
 
                     # draw detections
