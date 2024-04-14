@@ -143,9 +143,11 @@ class ObjectDetector:
         return self._process_outputs(outputs, image)
     
     def _face_yunet_detect(self, image):
-        self.ynet.setInputSize((image.shape[1], image.shape[0]))
-        _, faces = self.ynet.detect(image)
-        faces = faces if faces is not None else []
+        h,w,c = image.shape
+        self.ynet.setInputSize([w,h])
+        faces = self.ynet.detect(image)
+        faces = np.array([]) if faces[1] is None else faces[1]
+        
         return faces
     
     def detect(self, image):
