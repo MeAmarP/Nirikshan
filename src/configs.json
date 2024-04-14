@@ -14,10 +14,10 @@
         "nms_thresh": 0.3
     },
     "yunet-face":{
-        "weights":"models/yunet_n_640_640.onnx",
+        "weights":"models/face_detection_yunet_2023mar.onnx",
         "conf_thresh": 0.6,
-        "nms_thresh": 0.4,
-        "input_size":  640
+        "nms_thresh": 0.3,
+        "input_size":  320
     },
 
     "tracker": {
