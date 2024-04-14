@@ -7,7 +7,7 @@ class Color:
     """
     white = (255, 255, 255)
     black = (0, 0, 0)
-    red = (255, 0, 0)
+    red = (0, 0, 255)
     green = (0, 255, 0)
     blue = (0, 0, 255)
     cyan = (0, 255, 255)
@@ -32,26 +32,22 @@ def display_detections(frame: np.array, detections):
         cv2.rectangle(frame, (bbox[0], bbox[1]), (bbox[2], bbox[3]), Color.green, 2)
         cv2.putText(frame, dets['class_name'], (bbox[0], bbox[1]-10), cv2.FONT_HERSHEY_PLAIN, 2, Color.orange, 2)
 
-def display_faces(frame: np.array, faces):
-
+def display_faces(frame: np.array, faces):        
+    landmark_color = [
+    (255,   0,   0), # right eye
+    (  0,   0, 255), # left eye
+    (  0, 255,   0), # nose tip
+    (255,   0, 255), # right mouth corner
+    (  0, 255, 255)  # left mouth corner
+    ]
     for face in faces:
-            box = list(map(int, face[:4]))
-            cv2.rectangle(frame, box, Color.red, 2, cv2.LINE_AA)
+            bbox = face[0:4].astype(np.int32)
+            cv2.rectangle(frame, bbox, Color.red, 2, cv2.LINE_AA)
 
-            # landmarks = list(map(int, face[4:len(face)-1]))
-            # landmarks = np.array_split(landmarks, len(landmarks) / 2)
-            # for landmark in landmarks:
-            #     radius = 5
-            #     thickness = -1
-            #     cv2.circle(image, landmark, radius, color, thickness, cv2.LINE_AA)
-                
-            # confidence = face[-1]
-            # confidence = "{:.2f}".format(confidence)
-            # position = (box[0], box[1] - 10)
-            # font = cv2.FONT_HERSHEY_SIMPLEX
-            # scale = 0.5
-            # thickness = 2
-            # cv2.putText(image, confidence, position, font, scale, color, thickness, cv2.LINE_AA)
+            landmarks = face[4:14].astype(np.int32).reshape((5,2))
+            for idx, landmark in enumerate(landmarks):
+                cv2.circle(frame, landmark, 2, landmark_color[idx], 2)
+
 
 def display_tracked_ids(frame: np.array, tracked_objects):
     """_summary_
@@ -64,7 +60,7 @@ def display_tracked_ids(frame: np.array, tracked_objects):
         bbox = obj.tlwh.astype(np.int32)
         id = obj.track_id
         cv2.rectangle(frame, (bbox[0], bbox[1]), (bbox[0]+bbox[2], bbox[1]+bbox[3]), Color.cyan, 2)
-        cv2.putText(frame, str(id), (bbox[0], bbox[1]-10), cv2.FONT_HERSHEY_PLAIN, 2, Color.orange, 2)
+        cv2.putText(frame, str(id), (bbox[0], bbox[1]-10), cv2.FONT_HERSHEY_DUPLEX, 2, Color.orange, 2)
 
 # function to display the analytics on frame
 def display_analytics(frame: np.array , analytics):
@@ -80,5 +76,5 @@ def display_analytics(frame: np.array , analytics):
     if analytics.name == 'CountAnalytics':
         values = analytics.get()
         for key in values:
-            cv2.putText(frame, f"{key}: {values[key]}", (10, 30), cv2.FONT_HERSHEY_PLAIN, 2, Color.purple, 2)
+            cv2.putText(frame, f"{str(key).capitalize()} count: {values[key]}", (10, 30), cv2.FONT_HERSHEY_PLAIN, 2, Color.red, 2)
     return frame
