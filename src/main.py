@@ -71,8 +71,7 @@ def main():
                     # draw tracked objects
                     display_tracked_ids(frame=frame, tracked_objects=tracked_objects)
 
-                if face_detections:
-                    print(f"Face Detected {len(face_detections)}")
+                if len(face_detections) > 0:
                     display_faces(frame, face_detections)
 
                 # Display the current frame
