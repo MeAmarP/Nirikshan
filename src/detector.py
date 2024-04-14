@@ -84,15 +84,19 @@ class ObjectDetector:
             net = cv2.dnn.readNet(str(self.model_weights), str(self.model_cfg))
             net.setPreferableBackend(cv2.dnn.DNN_BACKEND_OPENCV)
             net.setPreferableTarget(cv2.dnn.DNN_TARGET_OPENCL)
+            return net
+        
         if self.model_name == 'yunet-face':
-            net = cv2.FaceDetectorYN.create(str(self.model_cfg),
-                                            "",
-                                            (640,640),
-                                            self.yunet_conf_thresh,
-                                            self.yunet_nms_thresh,
+            net = cv2.FaceDetectorYN.create(model = str(self.model_cfg),
+                                            config = "",
+                                            input_size = (320,320),
+                                            score_threshold=self.yunet_conf_thresh,
+                                            nms_threshold=self.yunet_nms_thresh,
+                                            top_k=5000,
                                             backend_id=0,
                                             target_id=0)
-        return net
+            net.setInputSize((320, 320))
+            return net
     
     def _process_outputs(self, outputs, image):
         height, width = image.shape[:2]
