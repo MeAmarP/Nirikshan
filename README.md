@@ -9,7 +9,7 @@ Nirikshan aims to provide video analytics on video sources like RTSP stream or v
 - DNN Models
   - [x] object detection: yolo-V3/V4
   - [ ] Pose Estimation: MediaPipe
-  - [ ] Face Detection
+  - [x] Face Detection
 - [x] Object Tracker: ByteTracker
 - [x] OpenCV for Video Processing and DNN for Inference
 - [ ] NVIDIA Triton for Inference
@@ -49,3 +49,4 @@ Nirikshan aims to provide video analytics on video sources like RTSP stream or v
 - yolov3: Radmon et al. "YOLOv3: An Incremental Improvement"
 - yolov4: Bochkovskiy et al. "YOLOv4: Optimal Speed and Accuracy of Object Detection"
 - ByteTrack: Zhang,Yifu et al. Multi-Object Tracking by Associating Every Detection Box.
+- YuNet: https://github.com/opencv/opencv_zoo/tree/main/models/face_detection_yunet
