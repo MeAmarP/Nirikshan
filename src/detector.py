@@ -38,7 +38,7 @@ class ObjectDetector:
             self.input_size = AppConfig.detector_input_size
             # load model
             self.net = self._load_model()
-            self.target_class_id = 0
+            # self.target_class_id = 0
 
         if self.model_name == 'yolov4':
             self.model_cfg = str(Path.cwd() / AppConfig.yolov4_cfg)
