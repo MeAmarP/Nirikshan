@@ -15,7 +15,7 @@ from core.analytics import CountAnalytics
 
 def main():
 
-    # Initialize object detector
+    # Initialize object (Person) detector
     yolov3_detector = ObjectDetector(model='yolov3')
 
     # Init Face Detector
