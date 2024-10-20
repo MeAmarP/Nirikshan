@@ -90,6 +90,7 @@ def main(path_to_vid_file: str):
                     traceback.print_exc()
                     continue
     
+    cv2.destroyAllWindows()
 
 
 if __name__ == "__main__":
