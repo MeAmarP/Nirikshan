@@ -93,4 +93,9 @@ def main(path_to_vid_file: str):
 
 
 if __name__ == "__main__":
-    main()
+    import argparse
+    parser = argparse.ArgumentParser(description="Get Path to valid Video file..")
+    parser.add_argument('fpath',type=str, help="Provide path to Video file" )
+    args = parser.parse_args()
+    filepath = args.path
+    main(path_to_vid_file=filepath)
