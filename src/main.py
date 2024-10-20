@@ -13,28 +13,34 @@ from utils import display_detections, display_tracked_ids, display_analytics
 from utils import display_faces
 from core.analytics import CountAnalytics
 
-def main():
+def main(path_to_vid_file: str):
+    # ! TODO Add code to get video file path from cli
+    # ! Check if input file exist
+    filepath = Path(path_to_vid_file)
+    if not filepath.exists():
+        print("Invalid File path, Check if file exists at location???")
+        # ! EXIT FROM APPLICATION DUE TO INVALID FILE PATH
+        exit()
+        
 
-    # Initialize object (Person) detector
-    yolov3_detector = ObjectDetector(model='yolov3')
-
-    # Init Face Detector
-    face_detector = ObjectDetector(model='yunet-face')
-
-    # Initialize object tracker
-    tracker = BYTETracker(frame_rate=AppConfig.tracker_fps)  # Assuming 30 fps for now (can be adjusted later)
-
-    # Initialize analytics object
-    count_analytics = CountAnalytics()
-
-    try:
-    # Open the video file
-        cap = cv2.VideoCapture("/data/office.mp4")
-    except Exception as e:
-        print(f"An error occurred while trying to open the video file: {e}")
-        traceback.print_exc()
-    else:
+    with cv2.VideoCapture("/data/office.mp4") as cap:
+        if not cap.isOpened():
+            raise IOError("Could not open video file.")
         # If successful, continue with processing the video frames
+        
+        # ------------------ init components -------------------- 
+        # Initialize object (Person) detector
+        yolov3_detector = ObjectDetector(model='yolov3')
+
+        # Init Face Detector
+        face_detector = ObjectDetector(model='yunet-face')
+
+        # Initialize object tracker
+        tracker = BYTETracker(frame_rate=AppConfig.tracker_fps)  # Assuming 30 fps for now (can be adjusted later)
+
+        # Initialize analytics object
+        count_analytics = CountAnalytics()
+        # -------------------------------------------------------
         while True:
             try:
                 # Read a frame from the video
