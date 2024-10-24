@@ -1,17 +1,16 @@
-import cv2
-import numpy as np
 import traceback
 from pathlib import Path
-import os
 
-import json
+import cv2
+import numpy as np
 
 from configs import AppConfig
+from core.analytics import CountAnalytics
 from detector import ObjectDetector
 from tracker.byte_tracker import BYTETracker
-from utils import display_detections, display_tracked_ids, display_analytics
-from utils import display_faces
-from core.analytics import CountAnalytics
+from utils import (display_analytics, display_detections, display_faces,
+                   display_tracked_ids)
+
 
 def main(path_to_vid_file: str):
     # ! TODO Add code to get video file path from cli
