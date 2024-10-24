@@ -1,11 +1,11 @@
 {
     "yolov3_model":{
-        "weights":"models/yolov3.weights",
-        "config":"models/yolov3.cfg"
+        "weights":"../models/yolov3/yolov3.weights",
+        "config":"../models/yolov3/yolov3.cfg"
     },
     "yolov4_model":{
-        "weights":"models/yolov4.weights",
-        "config":"models/yolov4.cfg"
+        "weights":"../models/yolov4/yolov4.weights",
+        "config":"../models/yolov4/yolov4.cfg"
     },
     "detector": {
         "class_labels":["person"],
