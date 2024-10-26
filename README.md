@@ -47,6 +47,7 @@ Nirikshan aims to provide video analytics on video sources like RTSP stream or v
     - [Yunet-face](https://github.com/opencv/opencv_zoo/tree/main/models/face_detection_yunet)
 3. Make sure conda env is activated.
 4. To Run application, Use command `make run FPATH=data/palace.mp4`
+
 ### FUTURE SCOPE (Items in the list are in consideration, not finalized though)
 - Action recognition in videos.
 - Support for multiple video sources (IP Cameras, Local Files)
