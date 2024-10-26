@@ -160,4 +160,11 @@ class ObjectDetector:
 
 if __name__ == "__main__":
     print("Starting object detection")
+    image_path = "/data/1.jpg"
+
+    dets = ObjectDetector(model='yolov3')
+
+    img = cv2.imread(image_path)
+
+    print(dets.detect(image=img)) 
 
