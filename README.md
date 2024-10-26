@@ -21,11 +21,11 @@ Nirikshan aims to provide video analytics on video sources like RTSP stream or v
 ### Analytics
 - Class: **Person**
   - [x] Count 
-  - Emotion
-  - Age Category
-    - Young Adults
-    - Middle Aged
-    - Older Adults
+  - ~~Emotion~~
+  - ~~Age Category~~
+    - ~~Young Adults~~
+    - ~~Middle Aged~~
+    - ~~Older Adults~~
   - Action
     - Smoking
     - Fighting
