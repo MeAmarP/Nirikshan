@@ -12,6 +12,13 @@ from utils import (display_analytics, display_detections, display_faces,
                    display_tracked_ids)
 
 
+import argparse
+parser = argparse.ArgumentParser(description="Get Path to valid Video file..")
+parser.add_argument('--fpath',type=str, help="Provide path to Video file" )
+args = parser.parse_args()
+path = args.fpath
+
+
 def main(path_to_vid_file: str):
     filepath = Path(path_to_vid_file)
     if not filepath.exists():
