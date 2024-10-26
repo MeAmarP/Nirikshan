@@ -1,6 +1,8 @@
 # Nirikshan (Supervision)
 ## Real Time Video Analytics Pipeline using object detection and tracking 
 
+    NOTE --> ByteTracker uses python-package lap, which wont work for python-version > 3.10
+
 Nirikshan aims to provide video analytics on video sources like RTSP stream or video file using deep learning models.
 
 - Video Source
