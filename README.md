@@ -21,11 +21,11 @@ Nirikshan aims to provide video analytics on video sources like RTSP stream or v
 ### Analytics
 - Class: **Person**
   - [x] Count 
-  - ~~Emotion~~
-  - ~~Age Category~~
-    - ~~Young Adults~~
-    - ~~Middle Aged~~
-    - ~~Older Adults~~
+  - ~~Emotion~~ NotImplemented
+  - ~~Age Category~~ NotImplemented
+    - ~~Young Adults~~NotImplemented
+    - ~~Middle Aged~~NotImplemented
+    - ~~Older Adults~~NotImplemented
   - Action
     - Smoking
     - Fighting
@@ -42,11 +42,11 @@ Nirikshan aims to provide video analytics on video sources like RTSP stream or v
 
 ### How to run
 1. Install dependencies using conda, use conda env file `myenv.yml`
-2. Download models from below links
+3. Download models from below links
     - [YOLO Models](https://github.com/AlexeyAB/darknet?tab=readme-ov-file#pre-trained-models)
     - [Yunet-face](https://github.com/opencv/opencv_zoo/tree/main/models/face_detection_yunet)
-3. Make sure conda env is activated.
-4. To Run application, Use command `make run FPATH=data/palace.mp4`
+4. Make sure conda env is activated.
+5. To Run application, Use command `make run FPATH=data/palace.mp4`
 
 ### FUTURE SCOPE (Items in the list are in consideration, not finalized though)
 - Action recognition in videos.
@@ -60,3 +60,4 @@ Nirikshan aims to provide video analytics on video sources like RTSP stream or v
 - yolov4: Bochkovskiy et al. "YOLOv4: Optimal Speed and Accuracy of Object Detection"
 - ByteTrack: Zhang,Yifu et al. Multi-Object Tracking by Associating Every Detection Box.
 - YuNet: https://github.com/opencv/opencv_zoo/tree/main/models/face_detection_yunet
+- PaddleDetection: https://github.com/PaddlePaddle/PaddleDetection/blob/develop/deploy/pipeline/README_en.md
