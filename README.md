@@ -29,7 +29,6 @@ Nirikshan aims to provide video analytics on video sources like RTSP stream or v
   - Action
     - Smoking
     - Fighting
-    - Patient monitoring for fall
 - Class: **Vehicle**
    - Count
    - Type (Car, Bus, Bike)
