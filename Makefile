@@ -7,6 +7,7 @@ test:
 .PHONY: test
 
 run:
-	PYTHONPATH=$(SRC_DIR) python $(SRC_DIR)/main.py --fpath $(FPATH)
+	PYTHONPATH=$(SRC_DIR) python $(SRC_DIR)/main.py --fpath $(FPATH) $(if $(RECORD),--record)
 
 .PHONY: run
+
