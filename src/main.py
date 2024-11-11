@@ -15,14 +15,15 @@ from utils import (display_analytics, display_detections, display_faces,
 import argparse
 parser = argparse.ArgumentParser(description="Get Path to valid Video file..")
 parser.add_argument('--fpath',type=str, help="Provide path to Video file" )
+parser.add_argument('--record', action='store_true', help="Flag to enable video recording of the output.")
 args = parser.parse_args()
 path = args.fpath
 
 
-def main(path_to_vid_file: str):
+def main(path_to_vid_file: str, record_video: bool):
     filepath = Path(path_to_vid_file)
     if not filepath.exists():
-        print("Invalid File path, Check if file exists at location???")
+        # logging.error("Invalid File path. Check if file exists at location.")
         # ! EXIT FROM APPLICATION DUE TO INVALID FILE PATH
         exit(1)
         
@@ -31,6 +32,18 @@ def main(path_to_vid_file: str):
     if not cap.isOpened():
         raise IOError("Could not open video file.")
     # If successful, continue with processing the video frames
+    
+    # Get video properties
+    frame_width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+    frame_height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    fps = int(cap.get(cv2.CAP_PROP_FPS))
+
+    out_writer = None
+    if record_video:
+        fourcc = cv2.VideoWriter_fourcc(*'XVID')
+        out_writer = cv2.VideoWriter('output.avi', fourcc, fps, (frame_width, frame_height))
+        # logging.info("Video recording enabled. Output will be saved as 'output.avi'.")
+
     
     # ------------------ init components -------------------- 
     # Initialize object (Person) detector
@@ -82,8 +95,13 @@ def main(path_to_vid_file: str):
             if len(face_detections) > 0:
                 display_faces(frame, face_detections)
 
+            # Record the frame if recording is enabled
+            if record_video and out_writer is not None:
+                print("+")
+                out_writer.write(frame)
+
             # Display the current frame
-            cv2.imshow('Video', frame)
+            # cv2.imshow('Video', frame)
             
             # Break the loop on 'q' key press
             if cv2.waitKey(1) & 0xFF == ord('q'):
@@ -93,8 +111,11 @@ def main(path_to_vid_file: str):
             traceback.print_exc()
             continue
     
+    cap.release()
+    if out_writer:
+        out_writer.release()
     cv2.destroyAllWindows()
 
 
 if __name__ == "__main__":
-    main(path_to_vid_file=path)
+    main(path_to_vid_file=path, record_video=args.record)
