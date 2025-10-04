@@ -41,12 +41,20 @@ Nirikshan aims to provide video analytics on video sources like RTSP stream or v
   - Species
 
 ### How to run
-1. Install dependencies using conda, use conda env file `myenv.yml`
-3. Download models from below links
+
+**Local environment**
+1. Install dependencies using conda with the provided environment file `myenv.yml`.
+2. Download the required model weights into the paths referenced in `src/configs.json`:
     - [YOLO Models](https://github.com/AlexeyAB/darknet?tab=readme-ov-file#pre-trained-models)
     - [Yunet-face](https://github.com/opencv/opencv_zoo/tree/main/models/face_detection_yunet)
-4. Make sure conda env is activated.
-5. To Run application, Use command `make run FPATH=data/palace.mp4`
+3. Activate the `myenv` conda environment.
+4. Run the application with `make run FPATH=data/palace.mp4` (replace the path with your video source).
+
+**Docker**
+- Build the image: `docker build -t nirikshan:latest .`
+- Run analytics (the container entrypoint is `python src/main.py`, so pass CLI args directly):
+  `docker run -it --gpus all -v $(pwd)/data:/workspace/data nirikshan:latest --fpath /workspace/data/sample.mp4`
+- Mount or bake in the model weight directories so the paths in `src/configs.json` remain valid inside the container.
 
 ### FUTURE SCOPE (Items in the list are in consideration, not finalized though)
 - Action recognition in videos.
