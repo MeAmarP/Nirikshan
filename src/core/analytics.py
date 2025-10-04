@@ -16,11 +16,12 @@ class CountAnalytics:
             if label not in self.classwise_count_curr:
                 self.classwise_count_curr[label] = 0
 
-    def update(self, tracked_objects, label):            
+    def update(self, tracked_objects, label):
         # If the object is a target to be tracked...
         if label in self.target_class_labels:
-            # Increment its count
-            self.classwise_count_curr[label] = len(tracked_objects)
+            # len(None) would raise, so guard against tracker returning None
+            countable = tracked_objects if tracked_objects is not None else []
+            self.classwise_count_curr[label] = len(countable)
 
     def get(self):
-        return self.classwise_count_curr
+        return dict(self.classwise_count_curr)
