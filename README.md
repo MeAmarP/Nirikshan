@@ -22,6 +22,7 @@ Nirikshan aims to provide video analytics on video sources like RTSP stream or v
 ### Analytics
 - Class: **Person**
   - [x] Count 
+  - [x] Crowd density heatmap
   - ~~Emotion~~ NotImplemented
   - ~~Age Category~~ NotImplemented
     - ~~Young Adults~~NotImplemented
@@ -55,6 +56,11 @@ Nirikshan aims to provide video analytics on video sources like RTSP stream or v
 - Run analytics (the container entrypoint is `python src/main.py`, so pass CLI args directly):
   `docker run -it --gpus all -v $(pwd)/data:/workspace/data nirikshan:latest --fpath /workspace/data/sample.mp4`
 - Mount or bake in the model weight directories so the paths in `src/configs.json` remain valid inside the container.
+
+### Crowd density heatmaps
+- Each frame is clustered into crowd "zones" using OpenCV k-means, and the resulting heatmap is blended onto the video feed in real time.
+- Tweak the behaviour (zone count, heatmap resolution, decay) via the `analytics.crowd_density` section in `src/configs.json`.
+- The overlay appears automatically when people are detected; the count overlay still shows per-class tallies alongside the heatmap.
 
 ### FUTURE SCOPE (Items in the list are in consideration, not finalized though)
 - Action recognition in videos.

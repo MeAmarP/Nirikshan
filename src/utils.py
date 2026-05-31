@@ -21,41 +21,36 @@ class Color:
     teal = (128, 128, 0)
 
 def display_detections(frame: np.array, detections):
-    """_summary_
-
-    Args:
-        frame (np.array): _description_
-        detections (_type_): _description_
-    """
+    """Draw raw detector bounding boxes and class labels on the frame."""
     for dets in detections:
         bbox = dets['box']
         cv2.rectangle(frame, (bbox[0], bbox[1]), (bbox[2], bbox[3]), Color.green, 2)
         cv2.putText(frame, dets['class_name'], (bbox[0], bbox[1]-10), cv2.FONT_HERSHEY_PLAIN, 2, Color.orange, 2)
 
-def display_faces(frame: np.array, faces):        
+def display_faces(frame: np.array, faces):
+    """Draw face bounding boxes and key landmarks."""
+
     landmark_color = [
-    (255,   0,   0), # right eye
-    (  0,   0, 255), # left eye
-    (  0, 255,   0), # nose tip
-    (255,   0, 255), # right mouth corner
-    (  0, 255, 255)  # left mouth corner
+        (255, 0, 0),  # right eye
+        (0, 0, 255),  # left eye
+        (0, 255, 0),  # nose tip
+        (255, 0, 255),  # right mouth corner
+        (0, 255, 255),  # left mouth corner
     ]
     for face in faces:
-            bbox = face[0:4].astype(np.int32)
-            cv2.rectangle(frame, bbox, Color.red, 2, cv2.LINE_AA)
+        bbox = face[0:4].astype(np.int32)
+        cv2.rectangle(frame, bbox, Color.red, 2, cv2.LINE_AA)
 
-            landmarks = face[4:14].astype(np.int32).reshape((5,2))
-            for idx, landmark in enumerate(landmarks):
-                cv2.circle(frame, landmark, 2, landmark_color[idx], 2)
+        landmarks = face[4:14].astype(np.int32).reshape((5, 2))
+        for idx, landmark in enumerate(landmarks):
+            cv2.circle(frame, landmark, 2, landmark_color[idx], 2)
 
 
 def display_tracked_ids(frame: np.array, tracked_objects):
-    """_summary_
+    """Render tracker-assigned IDs and bounding boxes around tracked objects."""
+    if not tracked_objects:
+        return
 
-    Args:
-        frame (np.array): _description_
-        tracked_objects (_type_): _description_
-    """
     for obj in tracked_objects:
         bbox = obj.tlwh.astype(np.int32)
         id = obj.track_id
@@ -63,18 +58,44 @@ def display_tracked_ids(frame: np.array, tracked_objects):
         cv2.putText(frame, str(id), (bbox[0], bbox[1]-10), cv2.FONT_HERSHEY_DUPLEX, 2, Color.orange, 2)
 
 # function to display the analytics on frame
-def display_analytics(frame: np.array , analytics):
-    """_summary_
+def display_analytics(frame: np.array, analytics):
+    """Render analytics overlays (counts, heatmaps, etc.) onto a frame."""
+    if analytics is None:
+        return frame
 
-    Args:
-        frame (np.array): _description_
-        analytics_metrics (dict): _description_
+    if isinstance(analytics, (list, tuple)):
+        for analytic in analytics:
+            frame = display_analytics(frame, analytic)
+        return frame
 
-    Returns:
-        _type_: _description_
-    """
-    if analytics.name == 'CountAnalytics':
+    name = getattr(analytics, 'name', '')
+
+    if name == 'CountAnalytics':
         values = analytics.get()
-        for key in values:
-            cv2.putText(frame, f"{str(key).capitalize()} count: {values[key]}", (10, 30), cv2.FONT_HERSHEY_PLAIN, 2, Color.red, 2)
+        for idx, (key, value) in enumerate(sorted(values.items())):
+            y_offset = 30 + (idx * 30)
+            cv2.putText(
+                frame,
+                f"{str(key).capitalize()} count: {value}",
+                (10, y_offset),
+                cv2.FONT_HERSHEY_PLAIN,
+                2,
+                Color.red,
+                2,
+            )
+        return frame
+
+    if name == 'CrowdDensityAnalytics':
+
+        frame = analytics.render_overlay(
+            frame,
+            alpha_fg=0.6,
+            alpha_overlay=0.4,
+            density_threshold=0.5,
+            # If you have a Color enum, pass Color.orange / Color.red here:
+            # color_low=Color.orange, color_high=Color.red
+        )
+        return frame
+
+
     return frame

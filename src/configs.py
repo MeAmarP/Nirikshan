@@ -15,6 +15,10 @@ class AppConfig:
     tracker_track_buffer = None
     tracker_match_thresh = None
     coco_names = None
+    crowd_density_zones = 4
+    crowd_density_decay = 0.85
+    crowd_density_heatmap_resolution = (64, 64)
+    crowd_density_min_detections = 1
 
     @classmethod
     def load_config(cls, config_path='default_config.json'):
@@ -43,8 +47,16 @@ class AppConfig:
         cls.tracker_track_thresh = config['tracker']['track_thresh']
         cls.tracker_track_buffer = config['tracker']['track_buffer']
         cls.tracker_match_thresh = config['tracker']['match_thresh']
+        # analytics
+        analytics_cfg = config.get('analytics', {})
+        crowd_cfg = analytics_cfg.get('crowd_density', {})
+        cls.crowd_density_zones = crowd_cfg.get('zones', cls.crowd_density_zones)
+        cls.crowd_density_decay = crowd_cfg.get('decay', cls.crowd_density_decay)
+        cls.crowd_density_min_detections = crowd_cfg.get('min_detections', cls.crowd_density_min_detections)
+        resolution = crowd_cfg.get('heatmap_resolution', list(cls.crowd_density_heatmap_resolution))
+        if isinstance(resolution, (list, tuple)) and len(resolution) == 2:
+            cls.crowd_density_heatmap_resolution = (int(resolution[0]), int(resolution[1]))
 
 
 config_path = str(Path.cwd() / 'src' / 'configs.json')
 AppConfig.load_config(config_path)
-

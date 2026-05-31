@@ -5,7 +5,7 @@ import cv2
 import numpy as np
 
 from configs import AppConfig
-from core.analytics import CountAnalytics
+from core.analytics import CountAnalytics, CrowdDensityAnalytics
 from detector import ObjectDetector
 from tracker.byte_tracker import BYTETracker
 from utils import (display_analytics, display_detections, display_faces,
@@ -57,6 +57,7 @@ def main(path_to_vid_file: str, record_video: bool):
 
     # Initialize analytics object
     count_analytics = CountAnalytics()
+    crowd_density_analytics = CrowdDensityAnalytics()
     # -------------------------------------------------------
 
     while True:
@@ -82,18 +83,18 @@ def main(path_to_vid_file: str, record_video: bool):
                 np_detections = np.array([np.concatenate((np.array(det['box']).astype(np.float16), np.array([det['confidence']]).astype(np.float16))) for det in detections])
                 
                 tracked_objects = tracker.update(np_detections)
-                # ** Analytics **
-                count_analytics.update(tracked_objects, 'person')
-                display_analytics(frame, count_analytics)
+            else:
+                tracked_objects = tracker.update(np.empty((0, 5), dtype=np.float32))
 
-                # draw detections
-                # display_detections(frame=frame, detections=detections)
-
-                # draw tracked objects
-                display_tracked_ids(frame=frame, tracked_objects=tracked_objects)
+            # ** Analytics **
+            count_analytics.update(tracked_objects, 'person')
+            crowd_density_analytics.update(tracked_objects, frame.shape[:2])
+            display_analytics(frame, [crowd_density_analytics])
 
             if len(face_detections) > 0:
                 display_faces(frame, face_detections)
+
+            display_tracked_ids(frame=frame, tracked_objects=tracked_objects)
 
             # Record the frame if recording is enabled
             if record_video and out_writer is not None:

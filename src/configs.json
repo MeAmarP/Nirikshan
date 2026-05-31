@@ -28,6 +28,13 @@
     },
     "others":{
         "coco_names":"assets/coco.names"
+    },
+    "analytics": {
+        "crowd_density": {
+            "zones": 5,
+            "heatmap_resolution": [256, 256],
+            "decay": 0.5,
+            "min_detections": 3
+        }
     }
-
 }
